@@ -1,2 +1,2 @@
 # basex-svn-api
-SVN XQuery API for BaseX
+SVN integration for BaseX
