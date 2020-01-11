@@ -1,2 +1,2 @@
-# basex-svn-extension
+# basex-svn-api
 SVN XQuery API for BaseX
