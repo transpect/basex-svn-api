@@ -57,9 +57,9 @@ svn:delete(String url, String username, String password, String path, Boolean fo
 ```
 ### update
 ```xquery
-svn:update (String username, String password, String path, String revision)
+svn:update(String username, String password, String path, String revision)
 ```
 ### commit
 ```xquery
-svn:commit (String username, String password, String path, String commitMessage)
+svn:commit(String username, String password, String path, String commitMessage)
 ```
