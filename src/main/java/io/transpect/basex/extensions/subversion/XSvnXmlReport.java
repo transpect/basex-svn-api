@@ -14,9 +14,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 /**
- * Returns XML-based reports or errors as result for
- * further processing in XProc pipelines
- *
+ * Returns reports or errors as XML (currently only
+ * string) that needs to be parsed with parse-xml()
  */
 public class XSvnXmlReport {
 
@@ -91,49 +90,4 @@ public class XSvnXmlReport {
 	String strResult = sb.toString();
 	return strResult;
     }
-    /*
-    public XdmNode createXmlResult(HashMap<String, String> results, XProcRuntime runtime, XAtomicStep step){
-        TreeWriter tree = new TreeWriter(runtime);
-        tree.startDocument(step.getNode().getBaseURI());
-        tree.addStartElement(XProcConstants.c_param_set);
-        for(String key:results.keySet()) {
-            tree.addStartElement(XProcConstants.c_param);
-            tree.addAttribute(new QName("name"), key);
-            tree.addAttribute(new QName("value"), results.get(key));
-            tree.addEndElement();
-        }
-        tree.addEndElement();
-        tree.endDocument();
-        return tree.getResult();
-    }
-    public XdmNode createXmlResult(String baseURI, String type, String[] results, XProcRuntime runtime, XAtomicStep step){
-        TreeWriter tree = new TreeWriter(runtime);
-        tree.startDocument(step.getNode().getBaseURI());
-        tree.addStartElement(XProcConstants.c_param_set);
-        tree.addAttribute(new QName("xml", "http://www.w3.org/XML/1998/namespace", "base"), baseURI);
-        for(int i = 0; i < results.length; i++){
-            tree.addStartElement(XProcConstants.c_param);
-            tree.addAttribute(new QName("name"), type);
-            tree.addAttribute(new QName("value"), results[i]);
-            tree.addEndElement();
-        }
-        tree.addEndElement();
-        tree.endDocument();
-        return tree.getResult();
-	}*/
-    /*
-    public XdmNode createXmlError(String message, XProcRuntime runtime, XAtomicStep step){
-        TreeWriter tree = new TreeWriter(runtime);
-        tree.startDocument(step.getNode().getBaseURI());
-        tree.addStartElement(XProcConstants.c_errors);
-        tree.addAttribute(new QName("code"), "svn-error");
-        tree.addStartElement(XProcConstants.c_error);
-        tree.addAttribute(new QName("code"), "error");
-        tree.addText(message);
-        tree.addEndElement();
-        tree.addEndElement();
-        tree.endDocument();
-        return tree.getResult();
-    }
-    */
 }
