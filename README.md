@@ -39,6 +39,10 @@ svn:info("repo-url", "username", "password")
 ```xquery
 svn:info(String url, String username, String password)
 ```
+### list
+```xquery
+svn:list(String url, String username, String password, Boolean recursive)
+```
 ### checkout
 ```xquery
 svn:checkout(String url, String username, String password, String path, String revision)
