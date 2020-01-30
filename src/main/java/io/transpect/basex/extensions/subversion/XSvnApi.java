@@ -20,6 +20,10 @@ public class XSvnApi  {
         XSvnInfo info = new XSvnInfo();
 	return info.XSvnInfo(url, username, password);
     }
+    public String list (String url, String username, String password, Boolean recursive) {
+        XSvnList list = new XSvnList();
+	return list.XSvnList(url, username, password, recursive);
+    }
     public String checkout (String url, String username, String password, String path, String revision) {
         XSvnCheckout checkout = new XSvnCheckout();
 	return checkout.XSvnCheckout(url, username, password, path, revision);
