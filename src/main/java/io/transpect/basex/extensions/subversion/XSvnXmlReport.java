@@ -1,5 +1,8 @@
 package io.transpect.basex.extensions.subversion;
 
+import java.io.File;
+import java.io.IOException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -47,6 +50,30 @@ public class XSvnXmlReport {
     }
     return xmlResult;
   }
+  public static FElem createXmlDirTree(File path, Boolean recursive) throws SVNException {
+    FElem element = new FElem(nsprefix, "files", nsuri);
+    element.add("xml:base", path.toURI().toString());
+    listEntries(path, recursive, element); 
+    return element;
+  }
+  public static FElem listEntries(File path, Boolean recursive, FElem dirElement) throws SVNException {
+    File[] dirList = path.listFiles();
+    if( path.isDirectory() && dirList != null ) {
+      for (File child : dirList ) {
+        String elementName = child.isDirectory() ? "directory" : "file";
+        FElem element = new FElem(nsprefix, elementName, nsuri);
+        element.add("name", child.getName());
+        if(!child.isDirectory()) {
+          element.add("size", String.valueOf(child.length() / 1024));
+        }
+        if(child.isDirectory() && recursive) {
+          listEntries(child, recursive, element);
+        }
+        dirElement.add(element);
+      }
+    }
+    return dirElement;
+  }
   public static FElem createXmlDirTree(String url, SVNRepository repository, Boolean recursive) throws SVNException {
     FElem xmlResult = new FElem(nsprefix, "files", nsuri);
     xmlResult.add("xml:base", url);
@@ -64,7 +91,9 @@ public class XSvnXmlReport {
       element.add("author", entry.getAuthor());
       element.add("date", entry.getDate().toString());
       element.add("revision", String.valueOf(entry.getRevision()));
-      element.add("size", String.valueOf(entry.getSize()));
+      if (entry.getKind() == SVNNodeKind.FILE) {
+          element.add("size", String.valueOf(entry.getSize()));
+      }
       if (entry.getKind() == SVNNodeKind.DIR && recursive == true) {
         listEntries(repository, (path.equals( "" )) ? entry.getName( ) : path + "/" + entry.getName( ), recursive, element);
       }
