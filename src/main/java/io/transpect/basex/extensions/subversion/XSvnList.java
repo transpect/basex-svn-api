@@ -1,6 +1,7 @@
 package io.transpect.basex.extensions.subversion;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
@@ -16,17 +17,24 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  * @see XSvnConnect
  */
 public class XSvnList {
-    
+  
   public FElem XSvnList (String url, String username, String password, Boolean recursive) {
     XSvnXmlReport report = new XSvnXmlReport();
+    FElem xmlResult;
     try{
       XSvnConnect connection = new XSvnConnect(url, username, password);
-      SVNRepository repository = connection.getRepository();
-      FElem xmlResult = report.createXmlDirTree(url, repository, recursive);
+      if(connection.isRemote()){
+        SVNRepository repository = connection.getRepository();
+        xmlResult = report.createXmlDirTree(url, repository, recursive);
+      } else {
+        File path = new File(new File(url).getCanonicalPath());
+        xmlResult = report.createXmlDirTree(path, recursive);
+        return xmlResult; 
+      }
       return xmlResult;
-    } catch(SVNException svne) {
-      System.out.println(svne.getMessage());
-      FElem xmlError = report.createXmlError(svne.getMessage());
+    } catch(SVNException | IOException e) {
+      System.out.println(e.getMessage());
+      FElem xmlError = report.createXmlError(e.getMessage());
       return xmlError;
     }
   }    
