@@ -11,15 +11,13 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.ISVNOptions;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
-
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNInfo;
-
+import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 
 /**
  * This class implements SVNKit and provides methods to connect to a 
@@ -88,7 +86,14 @@ public class XSvnConnect {
         SVNURL svnurl = null;
 	if(isURLBool(url)){
 	    svnurl = SVNURL.parseURIEncoded(url);
-	}
+	} else {
+          try {
+            File path = new File(url);
+            svnurl = SVNURL.fromFile(new File(path.getCanonicalPath()));
+          } catch ( IOException e) {
+            System.out.println(e.getMessage());
+          }
+        }
 	return svnurl;
     }
     public String getPath() throws IOException {
