@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNDirEntry;
+import org.tmatesoft.svn.core.SVNLock;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
@@ -83,16 +84,32 @@ public class XSvnXmlReport {
   public static FElem listEntries(SVNRepository repository, String path, Boolean recursive, FElem dirElement) throws SVNException {
     Collection entries = repository.getDir(path, -1 , null , (Collection) null);
     Iterator iterator = entries.iterator();
+    String repositoryRootURL = repository.getRepositoryRoot(true).toString();
     while (iterator.hasNext()) {
       SVNDirEntry entry = (SVNDirEntry) iterator.next( );
       String elementName = entry.getKind() == SVNNodeKind.DIR ? "directory" : "file";
+      String entryURL = entry.getURL().toString();
+      String entryRelPath = entryURL.replace(repositoryRootURL, "");
       FElem element = new FElem(nsprefix, elementName, nsuri);
       element.add("name", entry.getName());
       element.add("author", entry.getAuthor());
       element.add("date", entry.getDate().toString());
       element.add("revision", String.valueOf(entry.getRevision()));
-      if (entry.getKind() == SVNNodeKind.FILE) {
-          element.add("size", String.valueOf(entry.getSize()));
+      if ( entry.getKind() == SVNNodeKind.FILE ) {
+          SVNLock lock = repository.getLock( entryRelPath );
+          element.add("size", String.valueOf( entry.getSize() ));
+          if( lock != null ) {
+            element.add("lock-id", lock.getID());
+            element.add("lock-path", lock.getPath());
+            element.add("lock-owner", lock.getOwner());
+            element.add("lock-created", lock.getCreationDate().toString());
+            if( lock.getExpirationDate() != null ) {
+              element.add("lock-expires", lock.getExpirationDate().toString());
+            }
+            if( lock.getComment() != null ) {
+              element.add("lock-comment", lock.getComment());
+            }
+          }
       }
       if (entry.getKind() == SVNNodeKind.DIR && recursive == true) {
         listEntries(repository, (path.equals( "" )) ? entry.getName( ) : path + "/" + entry.getName( ), recursive, element);
