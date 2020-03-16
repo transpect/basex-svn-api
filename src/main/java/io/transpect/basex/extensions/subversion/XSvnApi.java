@@ -3,11 +3,14 @@ package io.transpect.basex.extensions.subversion;
 import org.basex.query.value.node.FElem;
 
 import io.transpect.basex.extensions.subversion.XSvnAdd;
+import io.transpect.basex.extensions.subversion.XSvnCopy;
 import io.transpect.basex.extensions.subversion.XSvnCheckout;
 import io.transpect.basex.extensions.subversion.XSvnCommit;
 import io.transpect.basex.extensions.subversion.XSvnConnect;
+import io.transpect.basex.extensions.subversion.XSvnCopy;
 import io.transpect.basex.extensions.subversion.XSvnDelete;
 import io.transpect.basex.extensions.subversion.XSvnInfo;
+import io.transpect.basex.extensions.subversion.XSvnList;
 import io.transpect.basex.extensions.subversion.XSvnMkDir;
 import io.transpect.basex.extensions.subversion.XSvnUpdate;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
@@ -29,6 +32,14 @@ public class XSvnApi  {
   public FElem checkout (String url, String username, String password, String path, String revision) {
     XSvnCheckout checkout = new XSvnCheckout();
     return checkout.XSvnCheckout(url, username, password, path, revision);
+  }
+  public FElem copy (String url, String username, String password, String path, String target, String commitMessage) {
+    XSvnCopy copy = new XSvnCopy();
+    return copy.XSvnCopy(url, username, password, path, target, false, commitMessage);
+  }
+  public FElem move (String url, String username, String password, String path, String target, String commitMessage) {
+    XSvnCopy move = new XSvnCopy();
+    return move.XSvnCopy(url, username, password, path, target, true, commitMessage);
   }
   public FElem mkdir (String url, String username, String password, String dir, Boolean parents, String commitMessage) {
     XSvnMkDir mkdir = new XSvnMkDir();
