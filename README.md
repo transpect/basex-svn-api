@@ -59,6 +59,14 @@ svn:add(String url, String username, String password, String path, Boolean paren
 ```xquery
 svn:delete(String url, String username, String password, String path, Boolean force, String commitMessage)
 ```
+### copy
+```xquery
+svn:copy(String url, String username, String password, String path, String target, String commitMessage)
+```
+### move
+```xquery
+svn:move(String url, String username, String password, String path, String target, String commitMessage)
+```
 ### update
 ```xquery
 svn:update(String username, String password, String path, String revision)
