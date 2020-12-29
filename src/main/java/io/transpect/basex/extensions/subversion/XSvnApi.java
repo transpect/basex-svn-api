@@ -12,6 +12,7 @@ import io.transpect.basex.extensions.subversion.XSvnDelete;
 import io.transpect.basex.extensions.subversion.XSvnInfo;
 import io.transpect.basex.extensions.subversion.XSvnList;
 import io.transpect.basex.extensions.subversion.XSvnMkDir;
+import io.transpect.basex.extensions.subversion.XSvnPropget;
 import io.transpect.basex.extensions.subversion.XSvnUpdate;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
 /**
@@ -60,5 +61,9 @@ public class XSvnApi  {
   public FElem commit (String username, String password, String path, String commitMessage) {
     XSvnCommit commit = new XSvnCommit();
     return commit.XSvnCommit(username, password, path, commitMessage);
+  }
+  public FElem propget (String url, String username, String password, String path, String revision, String propname) {
+    XSvnPropget propget = new XSvnPropget();
+    return propget.XSvnPropget(url, username, password, path, revision, propname);
   }
 }
