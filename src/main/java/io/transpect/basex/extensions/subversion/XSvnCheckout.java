@@ -38,7 +38,7 @@ public class XSvnCheckout {
       } else {
         svnRevision = svnPegRevision = SVNRevision.parse(revision);
       }
-      long checkoutRevision = updateClient.doCheckout(svnurl, checkoutPath, svnPegRevision, svnRevision, SVNDepth.IMMEDIATES, allowUnversionedObstructions);
+      long checkoutRevision = updateClient.doCheckout(svnurl, checkoutPath, svnPegRevision, svnRevision, SVNDepth.INFINITY, allowUnversionedObstructions);
       HashMap<String, String> results = new HashMap<String, String>();
       results.put("repo", svnurl.toString());
       results.put("revision", String.valueOf(checkoutRevision));
