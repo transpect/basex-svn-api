@@ -75,3 +75,15 @@ svn:update(String username, String password, String path, String revision)
 ```xquery
 svn:commit(String username, String password, String path, String commitMessage)
 ```
+### lock 
+```xquery
+svn:lock(String url, String username, String password, String+ paths, String message);
+```
+### unlock 
+```xquery
+svn:unlock(String url, String username, String password, String+ paths, String message);
+```
+### propget
+```xquery
+svn:propget (String url, String username, String password, String path, String revision, String propname)
+```
