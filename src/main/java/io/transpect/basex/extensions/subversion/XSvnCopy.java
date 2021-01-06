@@ -64,6 +64,9 @@ public class XSvnCopy {
         SVNCommitClient commitClient = clientmngr.getCommitClient();
         SVNStatusClient statusClient = clientmngr.getStatusClient();
         File targetPath = new File( url + "/" + target );
+        if(targetPath.isDirectory()){
+          targetPath = new File( url + "/" + target + "/");
+        }
         File[] sourcePaths, commitPaths = new File[paths.length];
         for( int i = 0; i < paths.length; i++ ) {
           File sourcePath = new File(url + "/" + paths[i]);
