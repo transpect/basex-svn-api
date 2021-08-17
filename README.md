@@ -85,5 +85,5 @@ svn:unlock(String url, String username, String password, String+ paths, String m
 ```
 ### propget
 ```xquery
-svn:propget (String url, String username, String password, String property, String revision)
+svn:propget(String url, String username, String password, String property, String revision)
 ```
