@@ -22,7 +22,7 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  */
 public class XSvnCheckout {
     
-  public FElem XSvnCheckout(String url, String username, String password, String path, String revision) {
+  public FElem XSvnCheckout(String url, String username, String password, String path, String revision, String depth) {
     XSvnXmlReport report = new XSvnXmlReport();
     try{
       XSvnConnect connection = new XSvnConnect(path, username, password);
@@ -38,7 +38,7 @@ public class XSvnCheckout {
       } else {
         svnRevision = svnPegRevision = SVNRevision.parse(revision);
       }
-      long checkoutRevision = updateClient.doCheckout(svnurl, checkoutPath, svnPegRevision, svnRevision, SVNDepth.INFINITY, allowUnversionedObstructions);
+      long checkoutRevision = updateClient.doCheckout(svnurl, checkoutPath, svnPegRevision, svnRevision, getSVNDepth(depth), allowUnversionedObstructions);
       HashMap<String, String> results = new HashMap<String, String>();
       results.put("repo", svnurl.toString());
       results.put("revision", String.valueOf(checkoutRevision));
@@ -48,6 +48,22 @@ public class XSvnCheckout {
     } catch(SVNException|IOException svne) {
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;
+    }
+  }
+  private SVNDepth getSVNDepth(String depth) {
+    switch (depth) {
+    case "empty":
+      return SVNDepth.EMPTY;
+    case "exclude":
+      return SVNDepth.EXCLUDE;
+    case "files":
+      return SVNDepth.FILES;
+    case "immediates":
+      return SVNDepth.IMMEDIATES;
+    case "unknown":
+      return SVNDepth.UNKNOWN;
+    default:
+      return SVNDepth.INFINITY;
     }
   }
 }

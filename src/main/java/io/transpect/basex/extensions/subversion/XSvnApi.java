@@ -31,9 +31,9 @@ public class XSvnApi  {
     XSvnList list = new XSvnList();
     return list.XSvnList(url, username, password, recursive);
   }
-  public FElem checkout (String url, String username, String password, String path, String revision) {
+  public FElem checkout (String url, String username, String password, String path, String revision, String depth) {
     XSvnCheckout checkout = new XSvnCheckout();
-    return checkout.XSvnCheckout(url, username, password, path, revision);
+    return checkout.XSvnCheckout(url, username, password, path, revision, depth);
   }
   public FElem copy (String url, String username, String password, String path, String target, String commitMessage) {
     XSvnCopy copy = new XSvnCopy();
