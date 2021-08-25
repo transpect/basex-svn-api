@@ -89,5 +89,5 @@ svn:propget(String url, String username, String password, String property, Strin
 ```
 ### propset
 ```xquery
-svn:propget(String url, String username, String password, String propertyName, String propertyValue)
+svn:propset(String url, String username, String password, String propertyName, String propertyValue)
 ```
