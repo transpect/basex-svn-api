@@ -14,11 +14,12 @@ import io.transpect.basex.extensions.subversion.XSvnList;
 import io.transpect.basex.extensions.subversion.XSvnLock;
 import io.transpect.basex.extensions.subversion.XSvnMkDir;
 import io.transpect.basex.extensions.subversion.XSvnPropGet;
+import io.transpect.basex.extensions.subversion.XSvnPropSet;
 import io.transpect.basex.extensions.subversion.XSvnUpdate;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
 /**
  * 
- * Public Interface for XSvn BaseX extension
+ * XSvn BaseX extension
  *
  */
 public class XSvnApi  {
@@ -67,6 +68,10 @@ public class XSvnApi  {
     XSvnPropGet propget = new XSvnPropGet();
     return propget.XSvnPropGet(url, username, password, property, revision);
   }
+  public FElem propset (String url, String username, String password, String propName, String propValue) {
+    XSvnPropSet propset = new XSvnPropSet();
+    return propset.XSvnPropSet(url, username, password, propName, propValue);
+  }   
   public FElem lock (String url, String username, String password, String paths, String message) {
     XSvnLock lock = new XSvnLock();
     return lock.XSvnLock(url, username, password, paths, false, false, message);
