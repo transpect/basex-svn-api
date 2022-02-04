@@ -10,6 +10,8 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNInfo;
 
 import org.basex.query.value.node.FElem;
+import org.basex.query.value.map.XQMap;
+import org.basex.query.QueryException;
 
 import io.transpect.basex.extensions.subversion.XSvnConnect;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
@@ -21,7 +23,10 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  * @see XSvnConnect
  */
 public class XSvnInfo {
-
+	
+  /**
+  * @deprecated  username/password login replaced with XQMap auth
+  */
   public FElem XSvnInfo (String url, String username, String password) {
     XSvnXmlReport report = new XSvnXmlReport();
     try{
@@ -37,6 +42,27 @@ public class XSvnInfo {
       FElem xmlResult = report.createXmlResult(results);
       return xmlResult;
     } catch(SVNException svne) {
+      System.out.println(svne.getMessage());
+      FElem xmlError = report.createXmlError(svne.getMessage());
+      return xmlError;
+    }
+  }
+	
+	public FElem XSvnInfo (String url, XQMap auth) {
+    XSvnXmlReport report = new XSvnXmlReport();
+    try{
+      XSvnConnect connection = new XSvnConnect(url, auth);
+      SVNWCClient client = connection.getClientManager().getWCClient();
+      SVNInfo info;
+      if(connection.isRemote()){
+        info = client.doInfo(connection.getSVNURL(), SVNRevision.HEAD, SVNRevision.HEAD);
+      } else {
+        info = client.doInfo(new File(url), SVNRevision.HEAD);
+      }
+      HashMap<String, String> results = getSVNInfo(info);
+      FElem xmlResult = report.createXmlResult(results);
+      return xmlResult;
+    } catch(QueryException | SVNException svne) {
       System.out.println(svne.getMessage());
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;

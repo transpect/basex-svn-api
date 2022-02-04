@@ -11,6 +11,8 @@ import org.tmatesoft.svn.core.wc.SVNCommitClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 
 import org.basex.query.value.node.FElem;
+import org.basex.query.value.map.XQMap;
+import org.basex.query.QueryException;
 
 import io.transpect.basex.extensions.subversion.XSvnConnect;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
@@ -22,6 +24,10 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  * @see XSvnDelete
  */
 public class XSvnDelete {
+	
+  /**
+  * @deprecated  username/password login replaced with XQMap auth
+  */
   public FElem XSvnDelete ( String url, String username, String password, String path, Boolean force, String commitMessage ) {
     Boolean dryRun = false;
     XSvnXmlReport report = new XSvnXmlReport(); 
@@ -45,6 +51,34 @@ public class XSvnDelete {
       FElem xmlResult = report.createXmlResult(baseURI, "delete", paths);
       return xmlResult;
     } catch(SVNException|IOException svne) {
+      System.out.println(svne.getMessage());
+      FElem xmlError = report.createXmlError(svne.getMessage());
+      return xmlError;
+    }
+  }
+	public FElem XSvnDelete ( String url, XQMap auth, String path, Boolean force, String commitMessage ) {
+    Boolean dryRun = false;
+    XSvnXmlReport report = new XSvnXmlReport(); 
+    try{
+      XSvnConnect connection = new XSvnConnect(url, auth);
+      SVNClientManager clientmngr = connection.getClientManager();
+      String baseURI = connection.isRemote() ? url : connection.getPath();
+      SVNCommitClient commitClient = clientmngr.getCommitClient();
+      SVNWCClient client = clientmngr.getWCClient();
+      String[] paths = path.split(" ");
+      for(int i = 0; i < paths.length; i++) {
+        String currentPath = paths[i];
+        if( connection.isRemote() ){
+          SVNURL[] svnurl = { SVNURL.parseURIEncoded( url + "/" + currentPath )};
+          commitClient.doDelete(svnurl, commitMessage);
+        } else {
+          File fullPath = new File( url + "/" + currentPath );
+          client.doDelete(fullPath, force, dryRun);
+        }
+      }
+      FElem xmlResult = report.createXmlResult(baseURI, "delete", paths);
+      return xmlResult;
+    } catch(QueryException | SVNException|IOException svne) {
       System.out.println(svne.getMessage());
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;

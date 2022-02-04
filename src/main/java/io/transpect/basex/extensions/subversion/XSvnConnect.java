@@ -4,7 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import org.json.*;
+
+import org.basex.query.value.node.FElem;
+import org.basex.query.value.map.XQMap;
+import org.basex.query.value.item.*;
+import org.basex.query.value.type.AtomType;
+import org.basex.query.QueryError;
+import org.basex.query.QueryException;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNErrorMessage;
@@ -68,37 +74,33 @@ public class XSvnConnect {
       print("using password authentication");
       this.username = username;
     }
-    clientManager = init(username, password);
+    clientManager = init();
   }
   
   /**
-  * Uses a JSON as below as authentication data. If cert-path is defined it is used as
+  * Uses a map as below as authentication data. If cert-path is defined it is used as
   *
   * a private key file, otherwise username and password is used as is.
   * auth := map{'username':'heinz', 'cert-path': '/data/svn/cert/heinz.p12', 'password': '****'}
   *
   */  
-  public XSvnConnect(String url, String jsonin) throws SVNException, JSONException{
-    
-    JSONObject auth = new JSONObject(jsonin);
-    
+  public XSvnConnect(String url, XQMap auth) throws SVNException, QueryException{		
     this.url = url;
-    this.password = auth.getString("password");
+    this.password = getStringFromMap(auth,"password");
     
     /* if cert-path is not empty, it is used as a path to a private key file.*/
-    if (!auth.getString("cert-path").isEmpty()){
+    if (!getStringFromMap(auth,"cert-path").isEmpty()){
       
       this.authType = AuthType.PRIVKEY;
       
-      this.username = auth.getString("username");
-      this.password = auth.getString("password");
-      this.keyFile = new File(auth.getString("cert-path"));
+      this.username = getStringFromMap(auth,"username");
+      this.keyFile = new File(getStringFromMap(auth,"cert-path"));
       
     } else {
       this.username = username;
       this.authType = AuthType.PASSWORD;
     }
-    clientManager = init(username, password);
+    clientManager = init();
   }
   
   /**
@@ -134,6 +136,11 @@ public class XSvnConnect {
     return isURLBool(url);
   }
   
+	private String getStringFromMap(XQMap map, String key) throws QueryException{
+		Str strKey = Str.get(key);
+		return new String(Str.get(map.get(strKey, null), null, null).string());
+	}
+	
   private void print(String text){
     System.out.println("XSvnConnect: " + text);
   }
@@ -165,7 +172,7 @@ public class XSvnConnect {
     return path.getCanonicalPath();
   }
   
-  private SVNClientManager init(String username, String password) throws SVNException{
+  private SVNClientManager init() throws SVNException{
 
     //Set up connection protocols support:
     DAVRepositoryFactory.setup();             // http
@@ -175,7 +182,7 @@ public class XSvnConnect {
     SVNClientManager clientManager;
     
     DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
-    if(username == null || username.isEmpty()){
+    if(this.username == null || this.username.isEmpty()){
       print("INFO: username is empty; use svn auth");
       ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
       clientManager = SVNClientManager.newInstance(options, authManager);
@@ -185,7 +192,7 @@ public class XSvnConnect {
       if(url.startsWith("http://")||url.startsWith("https://")){
         switch (this.authType){
           case PASSWORD:
-            clientManager = SVNClientManager.newInstance(options, username, password);
+            clientManager = SVNClientManager.newInstance(options, this.username, this.password);
             return clientManager;
             
           case PRIVKEY:
@@ -198,7 +205,7 @@ public class XSvnConnect {
       }
       else
       {
-        clientManager = SVNClientManager.newInstance(options, username, password);
+        clientManager = SVNClientManager.newInstance(options, this.username, this.password);
         SVNWCClient client = clientManager.getWCClient();
         return clientManager;
       }

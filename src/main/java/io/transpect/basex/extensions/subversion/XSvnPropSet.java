@@ -15,6 +15,8 @@ import org.tmatesoft.svn.core.wc.ISVNPropertyHandler;
 import org.tmatesoft.svn.core.SVNProperties;
 
 import org.basex.query.value.node.FElem;
+import org.basex.query.value.map.XQMap;
+import org.basex.query.QueryException;
 
 import io.transpect.basex.extensions.subversion.XSvnConnect;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
@@ -28,6 +30,9 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  */
 public class XSvnPropSet {
 
+  /**
+  * @deprecated  username/password login replaced with XQMap auth
+  */
   public FElem XSvnPropSet (String url, String username, String password, String propName, String propValue) {
     XSvnXmlReport report = new XSvnXmlReport();
     SVNRevision baseRevision;
@@ -48,6 +53,31 @@ public class XSvnPropSet {
       FElem xmlResult = report.createXmlResult(url, "property", results);
       return xmlResult;
     } catch(SVNException svne) {
+      System.out.println(svne.getMessage());
+      FElem xmlError = report.createXmlError(svne.getMessage());
+      return xmlError;
+    }
+  }
+	public FElem XSvnPropSet (String url, XQMap auth, String propName, String propValue) {
+    XSvnXmlReport report = new XSvnXmlReport();
+    SVNRevision baseRevision;
+    baseRevision = SVNRevision.HEAD;
+    try{
+      XSvnConnect connection = new XSvnConnect(url, auth);
+      SVNWCClient client = connection.getClientManager().getWCClient();
+      SVNProperties svnprops = new SVNProperties();
+      if(connection.isRemote()){
+        SVNURL svnurl = connection.getSVNURL();
+        client.doSetProperty(svnurl, propName, SVNPropertyValue.create(propValue), baseRevision, "added prop: " + propName, svnprops, false, getISVNPropertyHandler());        
+      } else {
+		 File path = new File(url);
+		 System.out.println("propName: " + propName);
+		 client.doSetProperty(path, propName, SVNPropertyValue.create(propValue), false, SVNDepth.EMPTY, getISVNPropertyHandler(), null);
+      }
+      String[] results = {propName, propValue};
+      FElem xmlResult = report.createXmlResult(url, "property", results);
+      return xmlResult;
+    } catch(QueryException | SVNException svne) {
       System.out.println(svne.getMessage());
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;
