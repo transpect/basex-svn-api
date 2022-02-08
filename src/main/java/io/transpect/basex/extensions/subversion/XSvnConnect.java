@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import org.basex.query.value.node.FElem;
 import org.basex.query.value.map.XQMap;
 import org.basex.query.value.item.*;
+import org.basex.query.value.Value;
 import org.basex.query.value.type.AtomType;
 import org.basex.query.QueryError;
 import org.basex.query.QueryException;
@@ -97,7 +98,7 @@ public class XSvnConnect {
       this.keyFile = new File(getStringFromMap(auth,"cert-path"));
       
     } else {
-      this.username = username;
+      this.username = getStringFromMap(auth,"username");
       this.authType = AuthType.PASSWORD;
     }
     clientManager = init();
@@ -138,7 +139,9 @@ public class XSvnConnect {
   
 	private String getStringFromMap(XQMap map, String key) throws QueryException{
 		Str strKey = Str.get(key);
-		return new String(Str.get(map.get(strKey, null), null, null).string());
+		Value val = map.get(strKey, null);
+		String result = new String(val.toString());
+		return result;
 	}
 	
   private void print(String text){
@@ -173,7 +176,6 @@ public class XSvnConnect {
   }
   
   private SVNClientManager init() throws SVNException{
-
     //Set up connection protocols support:
     DAVRepositoryFactory.setup();             // http
     SVNRepositoryFactoryImpl.setup();         // svn, svn+xxx (svn+ssh in particular)

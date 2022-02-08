@@ -4,6 +4,7 @@ import org.basex.query.value.node.FElem;
 import org.basex.query.value.map.XQMap;
 import org.basex.query.value.item.*;
 import org.basex.query.value.type.AtomType;
+import org.basex.util.InputInfo;
 
 import io.transpect.basex.extensions.subversion.XSvnAdd;
 import io.transpect.basex.extensions.subversion.XSvnCopy;
@@ -32,9 +33,11 @@ public class XSvnApi  {
 		Str usernamekey = Str.get("username");
 		Str passwordvalue = Str.get(password);
 		Str passwordkey = Str.get("password");
+		
+		InputInfo ii = new InputInfo("text.txt", 1, 1);
 		try {
-			XQMap result = XQMap.entry(usernamekey, usernamevalue, null);
-			result.put(passwordkey,passwordvalue, null);
+			XQMap result = XQMap.entry(usernamekey, usernamevalue, ii);
+			result.put(passwordkey,passwordvalue, ii);
 			return result;
 		}
 		catch (Exception e){
