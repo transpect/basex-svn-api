@@ -15,6 +15,7 @@ import org.basex.query.QueryException;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNErrorMessage;
+import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
@@ -75,7 +76,9 @@ public class XSvnConnect {
       print("using password authentication");
       this.username = username;
     }
-    clientManager = init();
+		
+		clientManager = init();
+		
   }
   
   /**
@@ -88,17 +91,14 @@ public class XSvnConnect {
   public XSvnConnect(String url, XQMap auth) throws SVNException, QueryException{		
     this.url = url;
     this.password = getStringFromMap(auth,"password");
-    
+		this.username = getStringFromMap(auth,"username");
+		
     /* if cert-path is not empty, it is used as a path to a private key file.*/
-    if (!getStringFromMap(auth,"cert-path").isEmpty()){
-      
+		String certpath = getStringFromMap(auth,"cert-path");
+    if (certpath != null && !certpath.isEmpty()){
       this.authType = AuthType.PRIVKEY;
-      
-      this.username = getStringFromMap(auth,"username");
-      this.keyFile = new File(getStringFromMap(auth,"cert-path"));
-      
+      this.keyFile = new File(certpath);
     } else {
-      this.username = getStringFromMap(auth,"username");
       this.authType = AuthType.PASSWORD;
     }
     clientManager = init();
@@ -141,7 +141,7 @@ public class XSvnConnect {
 		Str strKey = Str.get(key);
 		Value val = map.get(strKey, null);
 		String result = new String(val.toString());
-		return result;
+		return result.replace("\"","");
 	}
 	
   private void print(String text){
@@ -184,35 +184,35 @@ public class XSvnConnect {
     SVNClientManager clientManager;
     
     DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
-    if(this.username == null || this.username.isEmpty()){
-      print("INFO: username is empty; use svn auth");
-      ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
-      clientManager = SVNClientManager.newInstance(options, authManager);
-      return clientManager;
-      
-    } else {
-      if(url.startsWith("http://")||url.startsWith("https://")){
-        switch (this.authType){
-          case PASSWORD:
-            clientManager = SVNClientManager.newInstance(options, this.username, this.password);
-            return clientManager;
-            
-          case PRIVKEY:
-            SVNSSLAuthentication auth = new SVNSSLAuthentication(this.keyFile, this.password, false);
-            SVNAuthentication auths[] = new SVNAuthentication[]{auth};
-            BasicAuthenticationManager authManager = new BasicAuthenticationManager(auths);  
-            clientManager = SVNClientManager.newInstance(options, authManager);
-            return clientManager;
-        }
-      }
-      else
-      {
-        clientManager = SVNClientManager.newInstance(options, this.username, this.password);
-        SVNWCClient client = clientManager.getWCClient();
-        return clientManager;
-      }
-    }
-    return null;
+		if(this.username == null || this.username.isEmpty()){
+			print("INFO: username is empty; use svn auth");
+			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
+			clientManager = SVNClientManager.newInstance(options, authManager);
+			return clientManager;
+			
+		} else {
+			if(url.startsWith("http://")||url.startsWith("https://")){
+				switch (this.authType){
+					case PASSWORD:
+						clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+						return clientManager;
+						
+					case PRIVKEY:
+						SVNSSLAuthentication auth = new SVNSSLAuthentication(this.keyFile, this.password, false);
+						SVNAuthentication auths[] = new SVNAuthentication[]{auth};
+						BasicAuthenticationManager authManager = new BasicAuthenticationManager(auths);  
+						clientManager = SVNClientManager.newInstance(options, authManager);
+						return clientManager;
+				}
+			}
+			else
+			{
+				clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+				SVNWCClient client = clientManager.getWCClient();
+				return clientManager;
+			}
+		}
+		return null;
   }
   
   private String getUsernameFromFile(String input){
