@@ -76,9 +76,9 @@ public class XSvnConnect {
       print("using password authentication");
       this.username = username;
     }
-		
-		clientManager = init();
-		
+    
+    clientManager = init();
+    
   }
   
   /**
@@ -88,18 +88,21 @@ public class XSvnConnect {
   * auth := map{'username':'heinz', 'cert-path': '/data/svn/cert/heinz.p12', 'password': '****'}
   *
   */  
-  public XSvnConnect(String url, XQMap auth) throws SVNException, QueryException{		
+  public XSvnConnect(String url, XQMap auth) throws SVNException, QueryException{    
     this.url = url;
     this.password = getStringFromMap(auth,"password");
-		this.username = getStringFromMap(auth,"username");
-		
+    this.username = getStringFromMap(auth,"username");
+
     /* if cert-path is not empty, it is used as a path to a private key file.*/
-		String certpath = getStringFromMap(auth,"cert-path");
+    String certpath = getStringFromMap(auth,"cert-path");
+
     if (certpath != null && !certpath.isEmpty()){
       this.authType = AuthType.PRIVKEY;
       this.keyFile = new File(certpath);
+
     } else {
       this.authType = AuthType.PASSWORD;
+
     }
     clientManager = init();
   }
@@ -137,13 +140,6 @@ public class XSvnConnect {
     return isURLBool(url);
   }
   
-	private String getStringFromMap(XQMap map, String key) throws QueryException{
-		Str strKey = Str.get(key);
-		Value val = map.get(strKey, null);
-		String result = new String(val.toString());
-		return result.replace("\"","");
-	}
-	
   private void print(String text){
     System.out.println("XSvnConnect: " + text);
   }
@@ -184,35 +180,35 @@ public class XSvnConnect {
     SVNClientManager clientManager;
     
     DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
-		if(this.username == null || this.username.isEmpty()){
-			print("INFO: username is empty; use svn auth");
-			ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
-			clientManager = SVNClientManager.newInstance(options, authManager);
-			return clientManager;
-			
-		} else {
-			if(url.startsWith("http://")||url.startsWith("https://")){
-				switch (this.authType){
-					case PASSWORD:
-						clientManager = SVNClientManager.newInstance(options, this.username, this.password);
-						return clientManager;
-						
-					case PRIVKEY:
-						SVNSSLAuthentication auth = new SVNSSLAuthentication(this.keyFile, this.password, false);
-						SVNAuthentication auths[] = new SVNAuthentication[]{auth};
-						BasicAuthenticationManager authManager = new BasicAuthenticationManager(auths);  
-						clientManager = SVNClientManager.newInstance(options, authManager);
-						return clientManager;
-				}
-			}
-			else
-			{
-				clientManager = SVNClientManager.newInstance(options, this.username, this.password);
-				SVNWCClient client = clientManager.getWCClient();
-				return clientManager;
-			}
-		}
-		return null;
+    if(this.username == null || this.username.isEmpty()){
+      print("INFO: username is empty; use svn auth");
+      ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
+      clientManager = SVNClientManager.newInstance(options, authManager);
+      return clientManager;
+      
+    } else {
+      if(url.startsWith("http://")||url.startsWith("https://")){
+        switch (this.authType){
+          case PASSWORD:
+            clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+            return clientManager;
+            
+          case PRIVKEY:
+            SVNSSLAuthentication auth = new SVNSSLAuthentication(this.keyFile, this.password, false);
+            SVNAuthentication auths[] = new SVNAuthentication[]{auth};
+            BasicAuthenticationManager authManager = new BasicAuthenticationManager(auths);  
+            clientManager = SVNClientManager.newInstance(options, authManager);
+            return clientManager;
+        }
+      }
+      else
+      {
+        clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+        SVNWCClient client = clientManager.getWCClient();
+        return clientManager;
+      }
+    }
+    return null;
   }
   
   private String getUsernameFromFile(String input){
@@ -223,6 +219,17 @@ public class XSvnConnect {
       return matcher.group(1);
     }
     return null;
+  }
+  
+  private String getStringFromMap(XQMap map, String key) throws QueryException{
+      Str strKey = Str.get(key);
+    if (map.contains(strKey, null)){
+      Value val = map.get(strKey, null);
+      String result = new String(val.toString());
+      return result.replace("\"","");
+    } else {
+      return null;
+    }
   }
   
   private boolean isURLBool(String href){
