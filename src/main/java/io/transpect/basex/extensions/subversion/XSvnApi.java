@@ -65,6 +65,11 @@ public class XSvnApi  {
     XSvnList list = new XSvnList();
     return list.XSvnList(url, auth, recursive);
   }
+	public FElem look (String url, String path, XQMap auth, Boolean recursive) {
+    XSvnList list = new XSvnList();
+		String localpath = path != null?path:"/";
+    return list.XSvnLook(url, localpath, auth, recursive);
+  }
 	
   public FElem checkout (String url, String username, String password, String path, String revision, String depth) {
     XSvnCheckout checkout = new XSvnCheckout();

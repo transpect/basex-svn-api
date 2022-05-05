@@ -17,6 +17,7 @@ import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
 import org.basex.query.value.node.FElem;
+import org.basex.query.value.map.XQMap;
 
 /**
  * Returns reports or errors as XML (currently only
