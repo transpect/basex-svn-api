@@ -2,6 +2,8 @@ package io.transpect.basex.extensions.subversion;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
@@ -48,11 +50,18 @@ public class XSvnTreeHandler implements ISVNTreeHandler {
 		String elementName = "file";
 		if (path.isDir()) elementName = "directory";
 		FElem element = new FElem(nsprefix, elementName, nsuri);
-		element.add("name", path.getPath().replace(rootPath,"").replace("/",""));
-		element.add("depth", String.valueOf(path.getTreeDepth()));
 		
-		if (path.getTreeDepth() == 1){
-			XmlResult.add(element);
-		}
+		 Pattern p = Pattern.compile("([^/]*)$");
+		 Matcher m = p.matcher(path.getPath());
+		 if (m.find()){
+			
+			element.add("name", m.group(1));
+			element.add("test", "I Am Here");
+			element.add("depth", String.valueOf(path.getTreeDepth()));
+			
+			if (path.getTreeDepth() == 1){
+				XmlResult.add(element);
+			}
+		 }
 	}
 }
