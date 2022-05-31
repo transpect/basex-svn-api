@@ -56,7 +56,6 @@ public class XSvnTreeHandler implements ISVNTreeHandler {
 		 if (m.find()){
 			
 			element.add("name", m.group(1));
-			element.add("test", "I Am Here");
 			element.add("depth", String.valueOf(path.getTreeDepth()));
 			
 			if (path.getTreeDepth() == 1){
