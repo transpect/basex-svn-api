@@ -24,7 +24,6 @@ import io.transpect.basex.extensions.subversion.XSvnXmlReport;
  * @see XSvnDelete
  */
 public class XSvnDelete {
-	
   /**
   * @deprecated  username/password login replaced with XQMap auth
   */
@@ -56,7 +55,7 @@ public class XSvnDelete {
       return xmlError;
     }
   }
-	public FElem XSvnDelete ( String url, XQMap auth, String path, Boolean force, String commitMessage ) {
+  public FElem XSvnDelete ( String url, XQMap auth, String path, Boolean force, String commitMessage ) {
     Boolean dryRun = false;
     XSvnXmlReport report = new XSvnXmlReport(); 
     try{

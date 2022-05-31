@@ -52,7 +52,7 @@ public class XSvnList {
       return xmlError;
     }
   }
-	
+  
   public FElem XSvnList (String url, XQMap auth, Boolean recursive) {
     XSvnXmlReport report = new XSvnXmlReport();
     FElem xmlResult;
@@ -72,9 +72,9 @@ public class XSvnList {
       FElem xmlError = report.createXmlError(e.getMessage());
       return xmlError;
     }
-  }	
-	
-	private String getStringFromMap(XQMap map, String key) throws QueryException{
+  }
+  
+  private String getStringFromMap(XQMap map, String key) throws QueryException{
       Str strKey = Str.get(key);
     if (map.contains(strKey, null)){
       Value val = map.get(strKey, null);
@@ -84,28 +84,28 @@ public class XSvnList {
       return null;
     }
   }
-	
-	public FElem XSvnLook (String rootPath, String path, XQMap auth, Boolean recursive) {
+  
+  public FElem XSvnLook (String rootPath, String path, XQMap auth, Boolean recursive) {
     XSvnXmlReport report = new XSvnXmlReport();
     FElem xmlResult;
     try{
-			String password = getStringFromMap(auth,"password");
-			String username = getStringFromMap(auth,"username");
-			DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
-			BasicAuthenticationManager authManager = new BasicAuthenticationManager(username, password);
-			SVNLookClient looky = new SVNLookClient(authManager, options);
+      String password = getStringFromMap(auth,"password");
+      String username = getStringFromMap(auth,"username");
+      DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
+      BasicAuthenticationManager authManager = new BasicAuthenticationManager(username, password);
+      SVNLookClient looky = new SVNLookClient(authManager, options);
       File root = new File(new File(rootPath).getCanonicalPath());
-			XSvnTreeHandler handler = new XSvnTreeHandler(path);
-			SVNAdminPath admin = new SVNAdminPath(path,null,looky.doGetYoungestRevision(root));
-			
-			looky.doGetTree(root,admin.getPath(),SVNRevision.create(admin.getRevision()),true,true,handler);
+      XSvnTreeHandler handler = new XSvnTreeHandler(path);
+      SVNAdminPath admin = new SVNAdminPath(path,null,looky.doGetYoungestRevision(root));
+      
+      looky.doGetTree(root,admin.getPath(),SVNRevision.create(admin.getRevision()),true,true,handler);
       FElem xmlError = report.createXmlError(String.valueOf(handler.Result));
-			return handler.XmlResult;
-			
+      return handler.XmlResult;
+      
     } catch(QueryException | SVNException | IOException e) {
       System.out.println(e.getMessage());
       FElem xmlError = report.createXmlError(e.getMessage());
       return xmlError;
     }
-  }	
+  }
 }

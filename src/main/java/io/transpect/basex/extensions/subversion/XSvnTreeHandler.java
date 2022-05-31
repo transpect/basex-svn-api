@@ -32,35 +32,35 @@ public class XSvnTreeHandler implements ISVNTreeHandler {
   
   final static String nsprefix = "c";
   final static String nsuri = "http://www.w3.org/ns/xproc-step";
-	
-	public String Result;
-	public FElem XmlResult;
-	private String rootPath;
-	
-	public XSvnTreeHandler(String rootPath)
-	{
-		this.XmlResult = new FElem("root");
-		this.rootPath = rootPath;
-	}
-	
-	public void handlePath (SVNAdminPath path){
-		
-		Result = Result + '\n' + path.getPath() + path.getTreeDepth();
-		
-		String elementName = "file";
-		if (path.isDir()) elementName = "directory";
-		FElem element = new FElem(nsprefix, elementName, nsuri);
-		
-		 Pattern p = Pattern.compile("([^/]*)$");
-		 Matcher m = p.matcher(path.getPath());
-		 if (m.find()){
-			
-			element.add("name", m.group(1));
-			element.add("depth", String.valueOf(path.getTreeDepth()));
-			
-			if (path.getTreeDepth() == 1){
-				XmlResult.add(element);
-			}
-		 }
-	}
+  
+  public String Result;
+  public FElem XmlResult;
+  private String rootPath;
+  
+  public XSvnTreeHandler(String rootPath)
+  {
+    this.XmlResult = new FElem("root");
+    this.rootPath = rootPath;
+  }
+  
+  public void handlePath (SVNAdminPath path){
+    
+    Result = Result + '\n' + path.getPath() + path.getTreeDepth();
+    
+    String elementName = "file";
+    if (path.isDir()) elementName = "directory";
+    FElem element = new FElem(nsprefix, elementName, nsuri);
+    
+     Pattern p = Pattern.compile("([^/]*)$");
+     Matcher m = p.matcher(path.getPath());
+     if (m.find()){
+      
+      element.add("name", m.group(1));
+      element.add("depth", String.valueOf(path.getTreeDepth()));
+      
+      if (path.getTreeDepth() == 1){
+        XmlResult.add(element);
+      }
+     }
+  }
 }
