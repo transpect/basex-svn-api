@@ -36,8 +36,8 @@ public class XSvnLog {
       SVNLogClient client = connection.getClientManager().getLogClient();
 			SVNRevision SVNRevisionStart = SVNRevision.create(revisionStart);
 			SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
-			if (!SVNRevisionEnd.isValid()) SVNRevisionEnd = SVNRevision.HEAD;
 			if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
+			if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
 			
       XSvnLogEntryHandler handler = new XSvnLogEntryHandler();
 			client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
@@ -59,8 +59,8 @@ public class XSvnLog {
 			
       SVNRevision SVNRevisionStart = SVNRevision.create(revisionStart);
 			SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
-			if (!SVNRevisionEnd.isValid()) SVNRevisionEnd = SVNRevision.HEAD;
 			if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
+			if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
 			
       XSvnLogEntryHandler handler = new XSvnLogEntryHandler();
 			client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
