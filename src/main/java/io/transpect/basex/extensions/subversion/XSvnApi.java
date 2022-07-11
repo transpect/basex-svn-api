@@ -171,6 +171,17 @@ public class XSvnApi  {
 		return propset.XSvnPropSet(url, auth, propName, propValue);
   }
 	
+	  public FElem log (String url, String username, String password, int revisionStart, int revisionEnd, int limit) {
+    XSvnLog log = new XSvnLog();
+		XQMap auth = createauth(username, password);
+    return log.XSvnLog(url, auth, revisionStart, revisionEnd, limit);
+  }
+	public FElem log (String url, XQMap auth, int revisionStart, int revisionEnd, int limit) {
+    XSvnLog log = new XSvnLog();
+		return log.XSvnLog(url, auth, revisionStart, revisionEnd, limit);
+  }
+	
+	
   public FElem lock (String url, String username, String password, String paths, String message) {
     XSvnLock lock = new XSvnLock();
 		XQMap auth = createauth(username, password);
