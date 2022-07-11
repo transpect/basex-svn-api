@@ -51,9 +51,9 @@ public class XSvnTreeHandler implements ISVNTreeHandler {
     if (path.isDir()) elementName = "directory";
     FElem element = new FElem(nsprefix, elementName, nsuri);
     
-     Pattern p = Pattern.compile("([^/]*)$");
-     Matcher m = p.matcher(path.getPath());
-     if (m.find()){
+    Pattern p = Pattern.compile("([^/]*)$");
+    Matcher m = p.matcher(path.getPath());
+    if (m.find()){
       
       element.add("name", m.group(1));
       element.add("depth", String.valueOf(path.getTreeDepth()));
@@ -61,6 +61,6 @@ public class XSvnTreeHandler implements ISVNTreeHandler {
       if (path.getTreeDepth() == 1){
         XmlResult.add(element);
       }
-     }
+    }
   }
 }
