@@ -54,7 +54,7 @@ public class XSvnPropGet {
         FElem xmlResult = report.createXmlResult(results);
         return xmlResult;
       } else {
-        String msg = "SVN property cannot be found at this node!";
+        String msg = "SVN property cannot be found at this node (" + url + ")!";
         System.out.println("[ERROR] " + msg);
         FElem propError = report.createXmlError(msg);
         return propError;
@@ -91,7 +91,7 @@ public class XSvnPropGet {
         FElem xmlResult = report.createXmlResult(results);
         return xmlResult;
       } else {
-        String msg = "SVN property cannot be found at this node!";
+        String msg = "SVN property cannot be found at this node (" + url + ")!";
         System.out.println("[ERROR] " + msg);
         FElem propError = report.createXmlError(msg);
         return propError;
