@@ -55,12 +55,12 @@ public class XSvnPropGet {
         return xmlResult;
       } else {
         String msg = "SVN property cannot be found at this node (" + url + ")!";
-        System.out.println("[ERROR] " + msg);
+        //System.out.println("[ERROR] " + msg);
         FElem propError = report.createXmlError(msg);
         return propError;
       }
     } catch(SVNException svne) {
-      System.out.println(svne.getMessage());
+      //System.out.println(svne.getMessage());
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;
     }
@@ -92,12 +92,12 @@ public class XSvnPropGet {
         return xmlResult;
       } else {
         String msg = "SVN property cannot be found at this node (" + url + ")!";
-        System.out.println("[ERROR] " + msg);
+        //System.out.println("[ERROR] " + msg);
         FElem propError = report.createXmlError(msg);
         return propError;
       }
     } catch(QueryException | SVNException svne) {
-      System.out.println(svne.getMessage());
+      //System.out.println(svne.getMessage());
       FElem xmlError = report.createXmlError(svne.getMessage());
       return xmlError;
     }
