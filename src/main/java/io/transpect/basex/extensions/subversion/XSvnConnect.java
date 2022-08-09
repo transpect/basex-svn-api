@@ -179,7 +179,8 @@ public class XSvnConnect {
     
     SVNClientManager clientManager;
     
-    DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
+    File kitConf = new File(SVNWCUtil.getDefaultConfigurationDirectory().getParentFile(),"/.svnkit/");
+    DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(kitConf, true);
     if(this.username == null || this.username.isEmpty()){
       print("INFO: username is empty; use svn auth");
       ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager();
@@ -190,20 +191,22 @@ public class XSvnConnect {
       if(url.startsWith("http://")||url.startsWith("https://")){
         switch (this.authType){
           case PASSWORD:
-            clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+            BasicAuthenticationManager authManagerPW = new BasicAuthenticationManager(this.username, this.password);  
+				    clientManager = SVNClientManager.newInstance(options, authManagerPW);
             return clientManager;
             
           case PRIVKEY:
             SVNSSLAuthentication auth = new SVNSSLAuthentication(this.keyFile, this.password, false);
             SVNAuthentication auths[] = new SVNAuthentication[]{auth};
-            BasicAuthenticationManager authManager = new BasicAuthenticationManager(auths);  
-            clientManager = SVNClientManager.newInstance(options, authManager);
+            BasicAuthenticationManager authManagerPK = new BasicAuthenticationManager(auths);  
+            clientManager = SVNClientManager.newInstance(options, authManagerPK);
             return clientManager;
         }
       }
       else
       {
-        clientManager = SVNClientManager.newInstance(options, this.username, this.password);
+        BasicAuthenticationManager authManager = new BasicAuthenticationManager(this.username, this.password);  
+        clientManager = SVNClientManager.newInstance(options, authManager);
         SVNWCClient client = clientManager.getWCClient();
         return clientManager;
       }
