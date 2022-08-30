@@ -53,7 +53,7 @@ public class XSvnLogEntryHandler implements ISVNLogEntryHandler {
 	
 	public static FElem createXmlFromPaths(Map<String, SVNLogEntryPath> results) {
     FElem xmlResult = new FElem(nsprefix, "changedPaths", nsuri);
-		xmlResult.add("cahnges", "" + results.size());
+		xmlResult.add("changes", "" + results.size());
     for(String key:results.keySet()) {
 			FElem pathElement = new FElem(nsprefix, "changedPath", nsuri);
 			SVNLogEntryPath path = results.get(key);
