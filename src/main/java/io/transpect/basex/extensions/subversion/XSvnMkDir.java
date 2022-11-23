@@ -2,6 +2,9 @@ package io.transpect.basex.extensions.subversion;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileWriter;
+
+import java.util.Date;
 
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNURL;
@@ -9,6 +12,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNCommitClient;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
+import org.tmatesoft.svn.core.SVNCommitInfo;
 
 import org.basex.query.value.node.FElem;
 import org.basex.query.value.map.XQMap;
@@ -65,24 +69,27 @@ public class XSvnMkDir {
     Boolean addAndMkdir = true;
     Boolean climbUnversionedParents = false;
     Boolean includeIgnored = false;
+    SVNCommitInfo info = new SVNCommitInfo(666, "author", new Date());
     try{
       XSvnConnect connection = new XSvnConnect(url, auth);
       SVNClientManager clientmngr = connection.getClientManager();
       String baseURI = connection.isRemote() ? url : connection.getPath();
+      String[] dirs = dir.split(" ");
       SVNCommitClient commitClient = clientmngr.getCommitClient();
       SVNWCClient client = clientmngr.getWCClient();
-      String[] dirs = dir.split(" ");
       for(int i = 0; i < dirs.length; i++) {
         String currentDir = dirs[i];
         if( connection.isRemote() ){
           SVNURL[] svnurl = { SVNURL.parseURIEncoded( url + "/" + currentDir )};
-          commitClient.doMkDir(svnurl, commitMessage);
+          info = commitClient.doMkDir(svnurl, commitMessage, null, parents);
         } else {
           File path = new File( url + "/" + currentDir );
           client.doAdd(path, force, addAndMkdir, climbUnversionedParents, SVNDepth.IMMEDIATES, includeIgnored, parents);
+          File[] paths = {path};
+          commitClient.doCommit(paths, false, commitMessage, true, false);
         }
       }
-      FElem xmlResult = report.createXmlResult(baseURI, "mkdir", dirs);
+      FElem xmlResult = report.createXmlResult(baseURI, "mkdir v1.6" + info.toString(), dirs);
       return xmlResult;
     } catch(QueryException | SVNException|IOException svne) {
       System.out.println(svne.getMessage());
