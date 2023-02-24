@@ -54,8 +54,8 @@ svn:list(String url, map auth, Boolean recursive)
 ```
 ### checkout
 ```xquery
-svn:checkout(String url, String username, String password, String path, String revision)
-svn:checkout(String url, map auth, String path, String revision)
+svn:checkout(String url, String username, String password, String path, String revision, String depth)
+svn:checkout(String url, map auth, String path, String revision, String depth)
 ```
 ### mkdir
 ```xquery
