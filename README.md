@@ -112,3 +112,8 @@ svn:propget(String url, map auth, String property, String revision)
 svn:propset(String url, String username, String password, String propertyName, String propertyValue)
 svn:propset(String url, map auth, String propertyName, String propertyValue)
 ```
+### status
+```xquery
+svn:propset(String url, map auth)
+```
+
