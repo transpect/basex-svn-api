@@ -188,7 +188,7 @@ public class XSvnConnect {
       return clientManager;
       
     } else {
-      if(url.startsWith("http://")||url.startsWith("https://")){
+      if(isURLBool(url)){
         switch (this.authType){
           case PASSWORD:
             BasicAuthenticationManager authManagerPW = new BasicAuthenticationManager(this.username, this.password);  

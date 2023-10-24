@@ -33,7 +33,7 @@ public class XSvnPropSet {
   /**
   * @deprecated  username/password login replaced with XQMap auth
   */
-  public FElem XSvnPropSet (String url, String username, String password, String propName, String propValue) {
+  public FElem XSvnPropSet (String url, String username, String password, String propName, String propValue, String revision) {
     XSvnXmlReport report = new XSvnXmlReport();
     SVNRevision baseRevision;
     baseRevision = SVNRevision.HEAD;
@@ -58,17 +58,22 @@ public class XSvnPropSet {
       return xmlError;
     }
   }
-	public FElem XSvnPropSet (String url, XQMap auth, String propName, String propValue) {
+	public FElem XSvnPropSet (String url, XQMap auth, String propName, String propValue, String revision) {
     XSvnXmlReport report = new XSvnXmlReport();
-    SVNRevision baseRevision;
-    baseRevision = SVNRevision.HEAD;
+    SVNRevision svnRevision, svnPegRevision;
+    if(revision == null || revision.trim().isEmpty()){
+      svnRevision = svnPegRevision = SVNRevision.HEAD;
+    } else {
+      svnRevision = svnPegRevision = SVNRevision.parse(revision);
+    }
     try{
       XSvnConnect connection = new XSvnConnect(url, auth);
       SVNWCClient client = connection.getClientManager().getWCClient();
       SVNProperties svnprops = new SVNProperties();
       if(connection.isRemote()){
         SVNURL svnurl = connection.getSVNURL();
-        client.doSetProperty(svnurl, propName, SVNPropertyValue.create(propValue), baseRevision, "added prop: " + propName, svnprops, false, getISVNPropertyHandler());        
+        client.doSetProperty(svnurl, propName, SVNPropertyValue.create(propValue), svnRevision, "added prop: " + propName, svnprops, false, null);   
+        //client.doSetRevisionProperty(svnurl, svnRevision, propName, SVNPropertyValue.create(propValue), false, null);        
       } else {
 		 File path = new File(url);
 		 System.out.println("propName: " + propName);

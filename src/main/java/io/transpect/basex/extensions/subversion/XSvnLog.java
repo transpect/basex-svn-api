@@ -25,7 +25,7 @@ import io.transpect.basex.extensions.subversion.XSvnLogEntryHandler;
  * @see XSvnConnect
  */
 public class XSvnLog {
-	
+  
   /**
   * @deprecated  username/password login replaced with XQMap auth
   */
@@ -34,14 +34,14 @@ public class XSvnLog {
     try{
       XSvnConnect connection = new XSvnConnect(url, username, password);
       SVNLogClient client = connection.getClientManager().getLogClient();
-			SVNRevision SVNRevisionStart = SVNRevision.create(revisionStart);
-			SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
-			if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
-			if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
-			
+      SVNRevision SVNRevisionStart = SVNRevision.create(revisionStart);
+      SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
+      if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
+      if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
+      
       XSvnLogEntryHandler handler = new XSvnLogEntryHandler();
-			client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
-			
+      client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
+      
       FElem xmlResult = handler.XmlResult;
       return xmlResult;
     } catch(SVNException svne) {
@@ -50,21 +50,21 @@ public class XSvnLog {
       return xmlError;
     }
   }
-	
-	public FElem XSvnLog (String url, XQMap auth, int revisionStart, int revisionEnd, int limit) {
+  
+  public FElem XSvnLog (String url, XQMap auth, int revisionStart, int revisionEnd, int limit) {
     XSvnXmlReport report = new XSvnXmlReport();
     try{
       XSvnConnect connection = new XSvnConnect(url, auth);
       SVNLogClient client = connection.getClientManager().getLogClient();
-			
+      
       SVNRevision SVNRevisionStart = SVNRevision.create(revisionStart);
-			SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
-			if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
-			if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
-			
+      SVNRevision SVNRevisionEnd = SVNRevision.create(revisionEnd);
+      if (!SVNRevisionStart.isValid()) SVNRevisionStart = SVNRevision.create(0);
+      if (!SVNRevisionEnd.isValid() || revisionEnd <= 0) SVNRevisionEnd = SVNRevision.HEAD;
+      
       XSvnLogEntryHandler handler = new XSvnLogEntryHandler();
-			client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
-			
+      client.doLog(connection.getSVNURL(), null, SVNRevision.HEAD, SVNRevisionStart, SVNRevisionEnd, false, true, true, limit, null, handler);
+      
       FElem xmlResult = handler.XmlResult;
       return xmlResult;
     } catch(QueryException | SVNException svne) {

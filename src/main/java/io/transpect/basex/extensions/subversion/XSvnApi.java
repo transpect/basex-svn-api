@@ -19,6 +19,7 @@ import io.transpect.basex.extensions.subversion.XSvnLock;
 import io.transpect.basex.extensions.subversion.XSvnMkDir;
 import io.transpect.basex.extensions.subversion.XSvnPropGet;
 import io.transpect.basex.extensions.subversion.XSvnPropSet;
+import io.transpect.basex.extensions.subversion.XSvnStatus;
 import io.transpect.basex.extensions.subversion.XSvnUpdate;
 import io.transpect.basex.extensions.subversion.XSvnXmlReport;
 /**
@@ -54,6 +55,10 @@ public class XSvnApi  {
   public FElem info (String url, XQMap auth) {
     XSvnInfo info = new XSvnInfo();
     return info.XSvnInfo(url, auth);
+  }
+  public FElem status (String url, XQMap auth) {
+    XSvnStatus status = new XSvnStatus();
+    return status.XSvnStatus(url, auth);
   }
 	
   public FElem list (String url, String username, String password, Boolean recursive) {
@@ -161,14 +166,14 @@ public class XSvnApi  {
 		return propget.XSvnPropGet(url, auth, property, revision);
   }
 	
-  public FElem propset (String url, String username, String password, String propName, String propValue) {
+  public FElem propset (String url, String username, String password, String propName, String propValue, String revision) {
     XSvnPropSet propset = new XSvnPropSet();
 		XQMap auth = createauth(username, password);
-    return propset.XSvnPropSet(url, auth, propName, propValue);
+    return propset.XSvnPropSet(url, auth, propName, propValue, revision);
   }
-	public FElem propset (String url, XQMap auth, String propName, String propValue) {
+	public FElem propset (String url, XQMap auth, String propName, String propValue, String revision) {
     XSvnPropSet propset = new XSvnPropSet();
-		return propset.XSvnPropSet(url, auth, propName, propValue);
+		return propset.XSvnPropSet(url, auth, propName, propValue, revision);
   }
 	
 	  public FElem log (String url, String username, String password, int revisionStart, int revisionEnd, int limit) {
