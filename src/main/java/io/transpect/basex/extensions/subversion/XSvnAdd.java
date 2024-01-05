@@ -40,7 +40,7 @@ public class XSvnAdd {
       String[] paths = path.split(" ");
       for(int i = 0; i < paths.length; i++) {
         File currentPath = new File( url + "/" + paths[i]);
-        client.doAdd(currentPath, force, addAndMkdir, climbUnversionedParents, SVNDepth.IMMEDIATES, includeIgnored, parents);
+        client.doAdd(currentPath, force, addAndMkdir, climbUnversionedParents, SVNDepth.INFINITY, includeIgnored, parents);
       }
       FElem xmlResult = report.createXmlResult(baseURI, "add", paths);
       return xmlResult;
@@ -64,7 +64,7 @@ public class XSvnAdd {
       String[] paths = path.split(" ");
       for(int i = 0; i < paths.length; i++) {
         File currentPath = new File( url + "/" + paths[i]);
-        client.doAdd(currentPath, force, addAndMkdir, climbUnversionedParents, SVNDepth.IMMEDIATES, includeIgnored, parents);
+        client.doAdd(currentPath, force, addAndMkdir, climbUnversionedParents, SVNDepth.INFINITY, includeIgnored, parents);
       }
       FElem xmlResult = report.createXmlResult(baseURI, "add", paths);
       return xmlResult;
