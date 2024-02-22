@@ -115,13 +115,17 @@ public class XSvnApi  {
     XSvnMkDir mkdir = new XSvnMkDir();
 		return mkdir.XSvnMkDir(url, auth, dir, parents, commitMessage);
   }
+  public FElem mkdir (String url, XQMap auth, String dir, Boolean parents) {
+    XSvnMkDir mkdir = new XSvnMkDir();
+		return mkdir.XSvnMkDir(url, auth, dir, parents, "");
+  }
 	
   public FElem add (String url, String username, String password, String path, Boolean parents) {
     XSvnAdd add = new XSvnAdd();
 		XQMap auth = createauth(username, password);
     return add.XSvnAdd(url, auth, path, parents);
   }
-	public FElem add (String url, XQMap auth, String path, Boolean parents) {
+  public FElem add (String url, XQMap auth, String path, Boolean parents) {
     XSvnAdd add = new XSvnAdd();
 		return add.XSvnAdd(url, auth, path, parents);
   }
@@ -134,6 +138,10 @@ public class XSvnApi  {
 	public FElem delete (String url, XQMap auth, String path, Boolean force, String commitMessage) {
     XSvnDelete delete = new XSvnDelete();
 		return delete.XSvnDelete(url, auth, path, force, commitMessage);
+  }
+  public FElem delete (String url, XQMap auth, String path, Boolean force) {
+    XSvnDelete delete = new XSvnDelete();
+		return delete.XSvnDelete(url, auth, path, force, "");
   }
 	
   public FElem update (String username, String password, String path, String revision) {
@@ -185,7 +193,6 @@ public class XSvnApi  {
     XSvnLog log = new XSvnLog();
 		return log.XSvnLog(url, auth, revisionStart, revisionEnd, limit);
   }
-	
 	
   public FElem lock (String url, String username, String password, String paths, String message) {
     XSvnLock lock = new XSvnLock();
