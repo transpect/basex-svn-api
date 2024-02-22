@@ -86,7 +86,9 @@ public class XSvnMkDir {
           File path = new File( url + "/" + currentDir );
           client.doAdd(path, force, addAndMkdir, climbUnversionedParents, SVNDepth.IMMEDIATES, includeIgnored, parents);
           File[] paths = {path};
-          commitClient.doCommit(paths, false, commitMessage, true, false);
+          if (commitMessage != ""){
+            commitClient.doCommit(paths, false, commitMessage, true, false);
+          }
         }
       }
       FElem xmlResult = report.createXmlResult(baseURI, "mkdir v1.6" + info.toString(), dirs);
