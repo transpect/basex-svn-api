@@ -153,6 +153,10 @@ public class XSvnApi  {
     XSvnUpdate update = new XSvnUpdate();
 		return update.XSvnUpdate(auth, path, revision);
   }
+	public FElem update (XQMap auth, String path) {
+    XSvnUpdate update = new XSvnUpdate();
+		return update.XSvnUpdate(auth, path, "");
+  }
 	
   public FElem commit (String username, String password, String path, String commitMessage) {
     XSvnCommit commit = new XSvnCommit();
@@ -192,6 +196,10 @@ public class XSvnApi  {
 	public FElem log (String url, XQMap auth, int revisionStart, int revisionEnd, int limit) {
     XSvnLog log = new XSvnLog();
 		return log.XSvnLog(url, auth, revisionStart, revisionEnd, limit);
+  }
+	public FElem log (String url, XQMap auth) {
+    XSvnLog log = new XSvnLog();
+		return log.XSvnLog(url, auth, -1, -1, -1);
   }
 	
   public FElem lock (String url, String username, String password, String paths, String message) {
